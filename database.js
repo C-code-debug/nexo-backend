@@ -76,12 +76,12 @@ async function initDatabase() {
     const userExists = db.exec('SELECT * FROM users WHERE username = "admin"');
     
     if (!userExists || userExists.length === 0 || userExists[0].values.length === 0) {
-        const hashedPassword = bcrypt.hashSync('nexo2024', 10);
+        const hashedPassword = bcrypt.hashSync('NexADM404', 10);
         db.run('INSERT INTO users (username, password) VALUES (?, ?)', ['admin', hashedPassword]);
         saveDatabase();
         console.log('✅ Usuário admin criado!');
         console.log('   Username: admin');
-        console.log('   Senha: nexo2024');
+        console.log('   Senha: NexADM404');
     }
 
     console.log('✅ Banco de dados pronto!');
