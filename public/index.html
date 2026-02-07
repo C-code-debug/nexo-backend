@@ -1,0 +1,821 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nexo - Game Development</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-user-select: none;
+            user-select: none;
+        }
+
+        :root {
+            --bg-primary: #ffffff;
+            --bg-secondary: #f8f9fa;
+            --bg-card: #ffffff;
+            --text-primary: #1a1a1a;
+            --text-secondary: #6c757d;
+            --accent: #6366f1;
+            --accent-hover: #4f46e5;
+            --border: #e5e7eb;
+            --shadow: rgba(0, 0, 0, 0.1);
+        }
+
+        [data-theme="dark"] {
+            --bg-primary: #0f172a;
+            --bg-secondary: #1e293b;
+            --bg-card: #1e293b;
+            --text-primary: #f1f5f9;
+            --text-secondary: #94a3b8;
+            --accent: #818cf8;
+            --accent-hover: #6366f1;
+            --border: #334155;
+            --shadow: rgba(0, 0, 0, 0.3);
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            transition: background 0.3s ease, color 0.3s ease;
+            line-height: 1.6;
+        }
+
+        header {
+            background: var(--bg-card);
+            border-bottom: 2px solid var(--border);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 4px 6px var(--shadow);
+            transition: all 0.3s ease;
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1.5rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 2.5rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, var(--accent), #ec4899);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: 2px;
+            animation: fadeInDown 0.6s ease;
+        }
+
+        nav {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .nav-link {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-weight: 600;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .nav-link:hover,
+        .nav-link.active {
+            color: var(--accent);
+            background: var(--bg-secondary);
+        }
+
+        .theme-toggle {
+            background: var(--bg-secondary);
+            border: 2px solid var(--border);
+            color: var(--text-primary);
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+        }
+
+        .theme-toggle:hover {
+            transform: rotate(180deg);
+            background: var(--accent);
+            color: white;
+        }
+
+        .admin-btn {
+            background: var(--accent);
+            color: white;
+            border: none;
+            padding: 0.5rem 1.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .admin-btn:hover {
+            background: var(--accent-hover);
+            transform: translateY(-2px);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 3rem 2rem;
+            animation: fadeIn 0.6s ease;
+        }
+
+        .section {
+            display: none;
+            animation: slideIn 0.4s ease;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        .section-title {
+            font-size: 2.5rem;
+            margin-bottom: 2rem;
+            color: var(--text-primary);
+            position: relative;
+            padding-bottom: 1rem;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 80px;
+            height: 4px;
+            background: linear-gradient(135deg, var(--accent), #ec4899);
+            border-radius: 2px;
+        }
+
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 4px 6px var(--shadow);
+            transition: all 0.3s ease;
+            animation: fadeInUp 0.5s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px var(--shadow);
+        }
+
+        .card-title {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: var(--accent);
+        }
+
+        .card-date {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+
+        .card-content {
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+            white-space: pre-wrap;
+        }
+
+        .card-btn {
+            background: var(--accent);
+            color: white;
+            border: none;
+            padding: 0.7rem 1.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            width: 100%;
+            margin-top: 1rem;
+        }
+
+        .card-btn:hover {
+            background: var(--accent-hover);
+            transform: translateY(-2px);
+        }
+
+        .delete-btn {
+            background: #ef4444;
+            margin-top: 0.5rem;
+        }
+
+        .delete-btn:hover {
+            background: #dc2626;
+        }
+
+        .admin-form {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            display: none;
+        }
+
+        .admin-form.active {
+            display: block;
+            animation: slideIn 0.4s ease;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+            font-weight: 600;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.8rem;
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            font-family: inherit;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--accent);
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 120px;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: var(--bg-card);
+            padding: 2rem;
+            border-radius: 12px;
+            max-width: 400px;
+            width: 90%;
+            animation: scaleIn 0.3s ease;
+        }
+
+        .modal-title {
+            font-size: 1.8rem;
+            margin-bottom: 1.5rem;
+            color: var(--text-primary);
+        }
+
+        .empty-message {
+            text-align: center;
+            padding: 3rem;
+            color: var(--text-secondary);
+            font-size: 1.2rem;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes scaleIn {
+            from {
+                transform: scale(0.9);
+                opacity: 0;
+            }
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            background: var(--bg-secondary);
+            border: 2px solid var(--border);
+            color: var(--text-primary);
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1.5rem;
+        }
+
+        @media (max-width: 768px) {
+            .logo {
+                font-size: 2rem;
+            }
+
+            nav {
+                display: none;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                right: 0;
+                background: var(--bg-card);
+                flex-direction: column;
+                padding: 1rem;
+                border-bottom: 2px solid var(--border);
+                gap: 0;
+            }
+
+            nav.active {
+                display: flex;
+            }
+
+            .nav-link {
+                width: 100%;
+                text-align: center;
+                padding: 1rem;
+            }
+
+            .mobile-menu-btn {
+                display: block;
+            }
+
+            .section-title {
+                font-size: 2rem;
+            }
+
+            .cards-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .header-content {
+                padding: 1rem;
+            }
+
+            .container {
+                padding: 2rem 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <div class="logo">NEXO</div>
+            <button class="mobile-menu-btn" onclick="toggleMobileMenu()">☰</button>
+            <nav id="mainNav">
+                <a class="nav-link active" onclick="showSection('sobre')">Sobre</a>
+                <a class="nav-link" onclick="showSection('atualizacoes')">Atualizações</a>
+                <a class="nav-link" onclick="showSection('downloads')">Downloads</a>
+                <a class="nav-link" onclick="showSection('posts')">Posts</a>
+                <a class="nav-link" onclick="showSection('contato')">Contato</a>
+                <button class="theme-toggle" onclick="toggleTheme()">🌓</button>
+                <button class="admin-btn" onclick="showAdminModal()">Admin</button>
+            </nav>
+        </div>
+    </header>
+
+    <div class="container">
+        <section id="sobre" class="section active">
+            <h1 class="section-title">Sobre a Nexo</h1>
+            <div class="card">
+                <h2 class="card-title">Quem Somos</h2>
+                <p class="card-content">Somos um grupo de desenvolvedores de games iniciantes, apaixonados por criar experiências incríveis e inovadoras. A Nexo nasceu do sonho de unir criatividade e tecnologia para trazer jogos únicos ao mundo.</p>
+                <p class="card-content">Estamos aprendendo, crescendo e evoluindo a cada dia. Acompanhe nossa jornada!</p>
+            </div>
+        </section>
+
+        <section id="atualizacoes" class="section">
+            <h1 class="section-title">Atualizações</h1>
+            
+            <div class="admin-form" id="formAtualizacoes">
+                <h3>Adicionar Nova Atualização</h3>
+                <form onsubmit="adicionarAtualizacao(event)">
+                    <div class="form-group">
+                        <label>Título</label>
+                        <input type="text" id="atualTitulo" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Conteúdo</label>
+                        <textarea id="atualConteudo" required></textarea>
+                    </div>
+                    <button type="submit" class="card-btn">Publicar Atualização</button>
+                </form>
+            </div>
+
+            <div id="atualizacoesGrid" class="cards-grid"></div>
+        </section>
+
+        <section id="downloads" class="section">
+            <h1 class="section-title">Downloads</h1>
+            
+            <div class="admin-form" id="formDownloads">
+                <h3>Adicionar Novo Download</h3>
+                <form onsubmit="adicionarDownload(event)">
+                    <div class="form-group">
+                        <label>Nome do Jogo</label>
+                        <input type="text" id="downloadNome" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Versão</label>
+                        <input type="text" id="downloadVersao" placeholder="v1.0" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Link de Download</label>
+                        <input type="url" id="downloadLink" placeholder="https://..." required>
+                    </div>
+                    <div class="form-group">
+                        <label>Descrição</label>
+                        <textarea id="downloadDesc" required></textarea>
+                    </div>
+                    <button type="submit" class="card-btn">Adicionar Download</button>
+                </form>
+            </div>
+
+            <div id="downloadsGrid" class="cards-grid"></div>
+        </section>
+
+        <section id="posts" class="section">
+            <h1 class="section-title">Posts</h1>
+            
+            <div class="admin-form" id="formPosts">
+                <h3>Criar Novo Post</h3>
+                <form onsubmit="adicionarPost(event)">
+                    <div class="form-group">
+                        <label>Título</label>
+                        <input type="text" id="postTitulo" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Conteúdo</label>
+                        <textarea id="postConteudo" required></textarea>
+                    </div>
+                    <button type="submit" class="card-btn">Publicar Post</button>
+                </form>
+            </div>
+
+            <div id="postsGrid" class="cards-grid"></div>
+        </section>
+
+        <section id="contato" class="section">
+            <h1 class="section-title">Contato</h1>
+            <div class="card">
+                <h2 class="card-title">Entre em Contato</h2>
+                <p class="card-content">Quer falar com a gente? Envie uma mensagem ou siga nossas redes sociais!</p>
+                <p class="card-content">📧 Email: contato@nexogames.com
+🎮 Discord: discord.gg/nexo
+📱 Twitter: @nexogames</p>
+            </div>
+        </section>
+    </div>
+
+    <div class="modal" id="adminModal">
+        <div class="modal-content">
+            <h2 class="modal-title">Login Admin</h2>
+            <form onsubmit="loginAdmin(event)">
+                <div class="form-group">
+                    <label>Senha</label>
+                    <input type="password" id="adminPassword" placeholder="Digite a senha" required>
+                </div>
+                <button type="submit" class="card-btn">Entrar</button>
+                <button type="button" class="card-btn" style="background: #6c757d; margin-top: 0.5rem;" onclick="closeAdminModal()">Cancelar</button>
+            </form>
+            <p style="margin-top: 1rem; color: var(--text-secondary); font-size: 0.9rem;">
+                Senha padrão: <strong>nexo2024</strong>
+            </p>
+        </div>
+    </div>
+
+    <script>
+        const ADMIN_PASSWORD = 'nexo2024';
+        let isAdmin = false;
+
+        function detectSystemTheme() {
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme) {
+                document.documentElement.setAttribute('data-theme', savedTheme);
+            } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                document.documentElement.setAttribute('data-theme', 'dark');
+            }
+        }
+
+        function toggleTheme() {
+            const currentTheme = document.documentElement.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            document.documentElement.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+        }
+
+        function toggleMobileMenu() {
+            document.getElementById('mainNav').classList.toggle('active');
+        }
+
+        function showSection(sectionId) {
+            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+            document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+            
+            document.getElementById(sectionId).classList.add('active');
+            event.target.classList.add('active');
+            
+            document.getElementById('mainNav').classList.remove('active');
+        }
+
+        function showAdminModal() {
+            if (isAdmin) {
+                logout();
+            } else {
+                document.getElementById('adminModal').classList.add('active');
+            }
+        }
+
+        function closeAdminModal() {
+            document.getElementById('adminModal').classList.remove('active');
+            document.getElementById('adminPassword').value = '';
+        }
+
+        function loginAdmin(event) {
+            event.preventDefault();
+            const password = document.getElementById('adminPassword').value;
+            
+            if (password === ADMIN_PASSWORD) {
+                isAdmin = true;
+                closeAdminModal();
+                updateAdminUI();
+                alert('✅ Login realizado com sucesso!');
+            } else {
+                alert('❌ Senha incorreta!');
+            }
+        }
+
+        function logout() {
+            isAdmin = false;
+            updateAdminUI();
+            alert('Você saiu do modo admin.');
+        }
+
+        function updateAdminUI() {
+            const forms = document.querySelectorAll('.admin-form');
+            const adminBtn = document.querySelector('.admin-btn');
+            
+            forms.forEach(form => {
+                form.classList.toggle('active', isAdmin);
+            });
+            
+            adminBtn.textContent = isAdmin ? 'Sair Admin' : 'Admin';
+            adminBtn.style.background = isAdmin ? '#ef4444' : '';
+            
+            renderAll();
+        }
+
+        function getData(key) {
+            const data = localStorage.getItem(key);
+            return data ? JSON.parse(data) : [];
+        }
+
+        function saveData(key, data) {
+            localStorage.setItem(key, JSON.stringify(data));
+        }
+
+        function adicionarAtualizacao(event) {
+            event.preventDefault();
+            const atualizacoes = getData('atualizacoes');
+            
+            const nova = {
+                id: Date.now(),
+                titulo: document.getElementById('atualTitulo').value,
+                conteudo: document.getElementById('atualConteudo').value,
+                data: new Date().toLocaleDateString('pt-BR')
+            };
+            
+            atualizacoes.unshift(nova);
+            saveData('atualizacoes', atualizacoes);
+            
+            document.getElementById('atualTitulo').value = '';
+            document.getElementById('atualConteudo').value = '';
+            
+            renderAtualizacoes();
+            alert('✅ Atualização publicada!');
+        }
+
+        function removerAtualizacao(id) {
+            if (confirm('Deseja realmente remover esta atualização?')) {
+                let atualizacoes = getData('atualizacoes');
+                atualizacoes = atualizacoes.filter(a => a.id !== id);
+                saveData('atualizacoes', atualizacoes);
+                renderAtualizacoes();
+            }
+        }
+
+        function renderAtualizacoes() {
+            const atualizacoes = getData('atualizacoes');
+            const grid = document.getElementById('atualizacoesGrid');
+            
+            if (atualizacoes.length === 0) {
+                grid.innerHTML = '<div class="empty-message">Nenhuma atualização publicada ainda.</div>';
+                return;
+            }
+            
+            grid.innerHTML = atualizacoes.map(a => `
+                <div class="card">
+                    <h3 class="card-title">${a.titulo}</h3>
+                    <p class="card-date">${a.data}</p>
+                    <p class="card-content">${a.conteudo}</p>
+                    ${isAdmin ? `<button class="card-btn delete-btn" onclick="removerAtualizacao(${a.id})">Remover</button>` : ''}
+                </div>
+            `).join('');
+        }
+
+        function adicionarDownload(event) {
+            event.preventDefault();
+            const downloads = getData('downloads');
+            
+            const novo = {
+                id: Date.now(),
+                nome: document.getElementById('downloadNome').value,
+                versao: document.getElementById('downloadVersao').value,
+                link: document.getElementById('downloadLink').value,
+                descricao: document.getElementById('downloadDesc').value,
+                data: new Date().toLocaleDateString('pt-BR')
+            };
+            
+            downloads.unshift(novo);
+            saveData('downloads', downloads);
+            
+            document.getElementById('downloadNome').value = '';
+            document.getElementById('downloadVersao').value = '';
+            document.getElementById('downloadLink').value = '';
+            document.getElementById('downloadDesc').value = '';
+            
+            renderDownloads();
+            alert('✅ Download adicionado!');
+        }
+
+        function removerDownload(id) {
+            if (confirm('Deseja realmente remover este download?')) {
+                let downloads = getData('downloads');
+                downloads = downloads.filter(d => d.id !== id);
+                saveData('downloads', downloads);
+                renderDownloads();
+            }
+        }
+
+        function renderDownloads() {
+            const downloads = getData('downloads');
+            const grid = document.getElementById('downloadsGrid');
+            
+            if (downloads.length === 0) {
+                grid.innerHTML = '<div class="empty-message">Nenhum download disponível ainda.</div>';
+                return;
+            }
+            
+            grid.innerHTML = downloads.map(d => `
+                <div class="card">
+                    <h3 class="card-title">${d.nome}</h3>
+                    <p class="card-date">${d.versao} • ${d.data}</p>
+                    <p class="card-content">${d.descricao}</p>
+                    <a href="${d.link}" target="_blank">
+                        <button class="card-btn">⬇️ Baixar Agora</button>
+                    </a>
+                    ${isAdmin ? `<button class="card-btn delete-btn" onclick="removerDownload(${d.id})">Remover</button>` : ''}
+                </div>
+            `).join('');
+        }
+
+        function adicionarPost(event) {
+            event.preventDefault();
+            const posts = getData('posts');
+            
+            const novo = {
+                id: Date.now(),
+                titulo: document.getElementById('postTitulo').value,
+                conteudo: document.getElementById('postConteudo').value,
+                data: new Date().toLocaleDateString('pt-BR')
+            };
+            
+            posts.unshift(novo);
+            saveData('posts', posts);
+            
+            document.getElementById('postTitulo').value = '';
+            document.getElementById('postConteudo').value = '';
+            
+            renderPosts();
+            alert('✅ Post publicado!');
+        }
+
+        function removerPost(id) {
+            if (confirm('Deseja realmente remover este post?')) {
+                let posts = getData('posts');
+                posts = posts.filter(p => p.id !== id);
+                saveData('posts', posts);
+                renderPosts();
+            }
+        }
+
+        function renderPosts() {
+            const posts = getData('posts');
+            const grid = document.getElementById('postsGrid');
+            
+            if (posts.length === 0) {
+                grid.innerHTML = '<div class="empty-message">Nenhum post publicado ainda.</div>';
+                return;
+            }
+            
+            grid.innerHTML = posts.map(p => `
+                <div class="card">
+                    <h3 class="card-title">${p.titulo}</h3>
+                    <p class="card-date">${p.data}</p>
+                    <p class="card-content">${p.conteudo}</p>
+                    ${isAdmin ? `<button class="card-btn delete-btn" onclick="removerPost(${p.id})">Remover</button>` : ''}
+                </div>
+            `).join('');
+        }
+
+        function renderAll() {
+            renderAtualizacoes();
+            renderDownloads();
+            renderPosts();
+        }
+
+        detectSystemTheme();
+        renderAll();
+
+        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
+            if (!localStorage.getItem('theme')) {
+                document.documentElement.setAttribute('data-theme', e.matches ? 'dark' : 'light');
+            }
+        });
+    </script>
+</body>
+</html>

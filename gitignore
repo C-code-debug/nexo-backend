@@ -1,0 +1,17 @@
+# Dependências
+node_modules/
+
+# Banco de dados
+*.db
+*.db-shm
+*.db-wal
+
+# Variáveis de ambiente
+.env
+
+# Logs
+*.log
+
+# Sistema
+.DS_Store
+Thumbs.db
