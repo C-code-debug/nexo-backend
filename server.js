@@ -23,7 +23,11 @@ const {
 
 const app = express();
 const PORT = process.env.PORT || 3000;
-const JWT_SECRET = process.env.JWT_SECRET || 'nexo-secret-key';
+if (!process.env.JWT_SECRET) {
+  throw new Error("JWT_SECRET não definido no .env");
+}
+const JWT_SECRET = process.env.JWT_SECRET;
+
 
 // ============= CONFIGURAÇÃO DE UPLOAD =============
 
@@ -102,8 +106,12 @@ function authenticateToken(req, res, next) {
 
     jwt.verify(token, JWT_SECRET, (err, user) => {
         if (err) {
+            if (err.name === 'TokenExpiredError') {
+                return res.status(401).json({ error: 'Sessão expirada, faça login novamente' });
+            }
             return res.status(403).json({ error: 'Token inválido' });
         }
+
         req.user = user;
         next();
     });
