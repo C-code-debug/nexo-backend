@@ -23,11 +23,11 @@ const {
 
 const app = express();
 const PORT = process.env.PORT || 3000;
-if (!process.env.JWT_SECRET) {
-  throw new Error("JWT_SECRET não definido no .env");
-}
-const JWT_SECRET = process.env.JWT_SECRET;
+const JWT_SECRET = process.env.JWT_SECRET || 'nexo-super-secret-2024-mude-isso';
 
+if (!process.env.JWT_SECRET) {
+  console.warn('⚠️ AVISO: JWT_SECRET não definido, usando valor padrão');
+}
 
 // ============= CONFIGURAÇÃO DE UPLOAD =============
 
